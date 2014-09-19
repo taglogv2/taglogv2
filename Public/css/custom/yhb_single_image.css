@@ -1,0 +1,20 @@
+.square{
+	background-color:yellow;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+}
+
+.square {
+	position:absolute;
+	border-color: #428bca;
+}
+
+.ui-resizable-helper { 
+	border: 1px dotted gray; 
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+}
