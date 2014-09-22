@@ -227,7 +227,6 @@
 		});
 
 
-		
 
 		$(window).resize(function() {
 			// TODO:
@@ -239,7 +238,7 @@
 			//$("#canvas").save();
 			var postUrl = '{:U('product/edit','product_id='.$product['product_id'])}';
 			//$("#canvas").children(".component").trigger("save", postUrl);
-			//alert(JSON.stringify(YHB.needToSave));
+			alert(JSON.stringify(YHB.needToSave));
 			//alert(postUrl);
 			$.post(postUrl, JSON.stringify(YHB.needToSave), function(data) {
 				alert(data);

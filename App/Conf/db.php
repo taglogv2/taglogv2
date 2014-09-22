@@ -5,6 +5,6 @@ return array(
 'DB_PORT'=>'3306',
 'DB_NAME'=>'taglogv2',
 'DB_USER'=>'root',
-'DB_PWD'=>'',
+'DB_PWD'=>'6yhnmju7',
 'DB_PREFIX'=>'tl_',
 );

@@ -19,7 +19,8 @@ class ProductAction extends Action {
 	}
 	
 	
-	//添加说明书
+	// 添加说明书
+	// 新版中会将add和edit合并
 	public function add() {
 		if ($this->isAjax() || $this->isPost()) {
 			$d_product = D('Product');
@@ -174,7 +175,17 @@ class ProductAction extends Action {
 
 	//说明书编辑
 	public function edit() {
-		if($this->isPost() || $this->isAjax()){
+		if($this->isPost() || $this->isAjax()) {
+			$d_product = D('Product');
+			$m_page = M('Page');
+			$product['product_id'] = $this->_post('product_id', 'intval');
+			if($product['product_id'] == null) {
+				//echo("add");
+				
+			} else { 
+				echo("edit");
+			}
+		}else if($this->isPost() || $this->isAjax()){
 			$d_product = D('Product');
 			$d_video = D('Video');
 			$m_page = M('Page');
@@ -251,38 +262,43 @@ class ProductAction extends Action {
 		}else{
 			$member_id = intval(session('member_id'));
 			$product_id = intval($_GET['product_id']);	
-
-			$m_product = M('Product');
-			$m_page = M('Page');
-			
-			$product = $m_product->where('product_id = %d', $product_id)->find();
-			if (empty($product) || ($product['member_id'] ? ($product['member_id'] != $member_id) : (!$_GET['verify'] || trim($_GET['verify']) !=$product['verify']))) {
-
-				if ($_GET['verify'] && $_GET['verify'] == $product['verify']){
-					$message = '说明书已被认领，链接失效';
-				} elseif ($_GET['verify']){
-					$message = '请确认您的编辑链接是否正确';
-				} elseif (empty($product)) {
-					$message = '该产品说明书不存在';
-				} else {
-					$message = '您没有权限编辑该说明书';
-				}
-				$this->error($message);
-			} else {
-				$pages = $m_page->where('product_id = %d', intval($product['product_id']))->order('sort_id asc')->select();
-				foreach($pages as $k=>$v){
-					$pages[$k]['content'] = D('Video')->checkStatus(unserialize($v['content']));
-				}
-				if(!$product['member_id'] && $product['verify']) {
-					//$this->copylink = 'http://www.yhb360.com/recall/'.$product['product_id'].'/'.$product['verify'];
-					$this->copylink = C('APPUSER_BASE_URL').'/recall/'.$product['product_id'].'/'.$product['verify'];
-				}
-				$islogin = session('?email') ? 1 : 0;
-				$this->islogin = $islogin;
-				$this->pages = $pages;
-				$this->product = $product;
+			if (empty($product_id)) {
+				// 如果product id为空，则是add流程
 				$this->display();
+			} else {
+
+				$m_product = M('Product');
+				$m_page = M('Page');
 				
+				$product = $m_product->where('product_id = %d', $product_id)->find();
+				if (empty($product) || ($product['member_id'] ? ($product['member_id'] != $member_id) : (!$_GET['verify'] || trim($_GET['verify']) !=$product['verify']))) {
+
+					if ($_GET['verify'] && $_GET['verify'] == $product['verify']){
+						$message = '说明书已被认领，链接失效';
+					} elseif ($_GET['verify']){
+						$message = '请确认您的编辑链接是否正确';
+					} elseif (empty($product)) {
+						$message = '该产品说明书不存在';
+					} else {
+						$message = '您没有权限编辑该说明书';
+					}
+					$this->error($message);
+				} else {
+					$pages = $m_page->where('product_id = %d', intval($product['product_id']))->order('sort_id asc')->select();
+					foreach($pages as $k=>$v){
+						$pages[$k]['content'] = D('Video')->checkStatus(unserialize($v['content']));
+					}
+					if(!$product['member_id'] && $product['verify']) {
+						//$this->copylink = 'http://www.yhb360.com/recall/'.$product['product_id'].'/'.$product['verify'];
+						$this->copylink = C('APPUSER_BASE_URL').'/recall/'.$product['product_id'].'/'.$product['verify'];
+					}
+					$islogin = session('?email') ? 1 : 0;
+					$this->islogin = $islogin;
+					$this->pages = $pages;
+					$this->product = $product;
+					$this->display();
+					
+				}
 			}
 		}
 	}
