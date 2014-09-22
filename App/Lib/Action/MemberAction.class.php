@@ -129,21 +129,69 @@ class MemberAction extends Action {
 
 	//商家根目录
 	public function index(){
-		if($this->_get('categoryid','trim') == 'default'){
-			$where['category_id'] = 0;
-		}elseif($this->_get('categoryid','intval')){
-			$where['category_id'] = $this->_get('categoryid','intval');
-		}
-		
+		/* three */
+		$m_product = M('Product');
+		$params = array();
+		$order = isset($_GET['order']) ? trim($_GET['order']) : '';
+		$categoryid = isset($_GET['categoryid']) ? trim($_GET['categoryid']) : '';
+		$where['status'] = 1;
+		//if session('member_id');
 		$where['member_id'] = $member_id = session('member_id');
-		$productlist = M('Product')->where($where)->order('product_id')->select();
-
-		foreach($productlist as $k => $v){
-			if($v['category_id'])	$productlist[$k]['category'] = M('ProductCategory')->where(array('member_id'=>$member_id,'category_id'=>$v['category_id']))->find();
+		if(isset($_GET['categoryid'])){
+			$where['category_id']=$categoryid; 
+		}		
+		/* order type */
+		switch ($order) {
+			case 'hits_up' :
+				$order = 'hits';
+				break;
+			case 'hits_down' :
+				$order = 'hits desc';
+				break;
+			case 'ct_up' : 
+				$order = 'create_time';
+				break;
+			case 'ct_down' : 
+				$order = 'create_time desc';
+				break;
+			case 'ut_up' : 
+				$order = 'update_time';
+				break;
+			case 'ut_down' : 
+				$order = 'update_time desc';
+				break;
+			case 'lt_up' : 
+				$order = 'last_view_time';
+				break;
+			case 'lt_down' : 
+				$order = 'last_view_time desc';
+				break;
+			default:
+				$order = 'update_time desc';
+				break;
 		}
-		$categorylist = M('ProductCategory')->where(array('member_id'=>$member_id))->order('category_id')->select();
+
+		/* pages */
+		$p = isset($_GET['p']) ? intval($_GET['p']) : 1 ;
+		$list = $m_product->where($where)->order($order)->page($p.',10')->select();
+		$count = $m_product->where($where)->count();
+
+		import("@.ORG.Page");
+		$Page = new Page($count,10);
+		$parameter = implode('&', $params);
+		$this->parameter = $parameter;
 		
-		$this->productlist = $productlist;
+		if($_GET['order']) $parameter .= '&order='.trim($_GET['order']);
+		$Page->parameter = $parameter;
+		$show = $Page->show();		
+		$this->assign('page',$show);
+
+		$categorylist = M('ProductCategory')->where(array('member_id'=>$member_id))->order('category_id')->select();
+		foreach($list as $k => $v){
+			if($v['category_id'])	$list[$k]['category'] = M('ProductCategory')->where(array('member_id'=>$member_id,'category_id'=>$v['category_id']))->find();
+		}
+		
+		$this->assign('productlist',$list);
 		$this->categorylist = $categorylist;
 		$this->display();
 	}

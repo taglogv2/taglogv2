@@ -1,0 +1,22 @@
+<!--st head-navigator-->
+	<div class="head">
+		<a class="head-logo" href="__ROOT__">
+				<img src="Public/css/img/yhb_logo.png">
+		</a>
+		<div class="head-nav flr">
+			<ul>
+				<li class="head-dropdown" >
+				<!-- can not use tag a, use span instead -->
+					<span class="head-link">
+						<i class="glyphicon glyphicon-cog"></i>{:session('email')}<b class="caret"></b>
+						<ul class="head-dropdown-menu">
+							<li><a class="need-save" href="{:U('member/home')}">账号设置</a></li>
+							<li><a class="need-save" href="{:U('member/logout')}">退出</a></li>
+						</ul>
+					</span>
+				</li>
+			<li><a class="need-save"  href="{:U('member/home','act=message')}"><i class="glyphicon glyphicon-bell"></i>通知</a></li>
+			<li><a class="need-save"  href="{:U('member/index')}"><i class="glyphicon glyphicon-book"></i>我的说明书</a></li>
+		</div>
+	</div>
+	<!--end -->

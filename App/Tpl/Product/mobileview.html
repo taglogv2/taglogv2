@@ -16,8 +16,8 @@
 		<script src="http://yhb360.qiniudn.com/js/swipe.js"></script>
     </head>
     <body>
-		<div id="big_img_bg" ontouchstart="hide_m(this);" ontouchmove="hide_m(this);" ontouchend="hide_m(this);" ontouchcancel="hide_m(this);" onmousedown="hide_m(this);" onclick="hide_m(this);" style="background:#333333;opacity:0.7; filter:alpha(opacity=70);position: fixed;width:100%;top:0;z-index:9999"></div>
-		<div id="big_img" ontouchstart="hide_m(this);" ontouchmove="hide_m(this);" ontouchend="hide_m(this);" ontouchcancel="hide_m(this);" onmousedown="hide_m(this);"  onclick="hide_m(this);" style=" position: fixed;width:100%;top:0;z-index:99999"><img onclick="hide_m(this);" ontouchmove="hide_m(this);" ontouchend="hide_m(this);" ontouchcancel="hide_m(this);" onmousedown="hide_m(this);"  ontouchstart="hide_m(this);" src="http://yhb360.qiniudn.com/images/default_img.png" style="margin:auto;display:block;width:100%;z-index:99999"></div>
+		<!-- <div id="big_img_bg" ontouchstart="hide_m(this);" ontouchmove="hide_m(this);" ontouchend="hide_m(this);" ontouchcancel="hide_m(this);" onmousedown="hide_m(this);" onclick="hide_m(this);" style="background:#333333;opacity:0.7; filter:alpha(opacity=70);position: fixed;width:100%;top:0;z-index:9999"></div>
+		<div id="big_img" ontouchstart="hide_m(this);" ontouchmove="hide_m(this);" ontouchend="hide_m(this);" ontouchcancel="hide_m(this);" onmousedown="hide_m(this);"  onclick="hide_m(this);" style=" position: fixed;width:100%;top:0;z-index:99999"><img onclick="hide_m(this);" ontouchmove="hide_m(this);" ontouchend="hide_m(this);" ontouchcancel="hide_m(this);" onmousedown="hide_m(this);"  ontouchstart="hide_m(this);" src="http://yhb360.qiniudn.com/images/default_img.png" style="margin:auto;display:block;width:100%;z-index:99999"></div> -->
 		<div class="swipe_box">
 		<div class="swipe" id="mobile_view_page_box_big">
 			<div class='swipe-wrap'>
@@ -194,6 +194,11 @@
             $('.product_view_name>span').css({color:"#ffffff", fontSize:"85%"});
             $('.product_view_name>span').prepend("<img align='center' src='../images/ldblogo.png' width='15%' > &nbsp;");
             $('.product_view_content_name').css("background", "#000000");
+        }else if(pid == 106){
+        	$('.product_view_name').css({"background-image":"none","height":"80px"});
+        	$('.product_view_name>span').css({fontSize:".7em","font-weight":"bold"});
+	        $('.product_view_content_name').hide();
+	        $('.product_count_pages').hide();
         }
 
 

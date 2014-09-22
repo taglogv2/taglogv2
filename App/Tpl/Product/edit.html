@@ -45,23 +45,10 @@
 
 
 
-	<!--st head-navigator-->
-	<div class="head">
-		<a class="head-logo" href="__ROOT__">
-				<img src="Public/css/img/yhb_logo.png">
-		</a>
-		<div class="head-nav flr">
-			<a>
-				<i class="glyphicon glyphicon-cog"></i>刘昕<b class="caret"></b>
-			</a>
-			<a href=""><i class="glyphicon glyphicon-bell"></i>通知</a>
-			<a href=""><i class="glyphicon glyphicon-book"></i>我的说明书</a>
-		</div>
-	</div>
-	<!--end -->
+	<include file="Public:head"/>
 	<!-- left-navigator -->
 	<div class="left-nav">
-			<a class="left-nav-slider" id="upload-img-btn">
+			<a class="left-nav-slider" id="add-page-btn">
 				<span class="left-nav-icon"><i class="glyphicon glyphicon-plus"></i></span>
 				<span class="left-nav-text">新建一页</span>
 			</a>
@@ -145,6 +132,7 @@
 
 					</div>
   		
+
 				</div>
 			</div>
 		</div>
@@ -234,6 +222,7 @@
 			});
 
 	  		$('.editor-content').niceScroll({cursorwidth:8});
+
 
 		});
 
