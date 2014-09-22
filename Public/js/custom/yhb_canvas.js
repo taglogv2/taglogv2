@@ -1,17 +1,14 @@
 ;(function ( $, window, document, undefined ) {
 
     var pluginName = 'yhb_canvas',
-        plugin,
         defaults = {
             callback: function(str) {}
         },
-        $this,
         prev_top = false,
         prev_left = false;
 
     // The actual plugin constructor
     function Plugin( element, options ) {
-        plugin = this;
         this.element = element;
         this.options = $.extend( {}, defaults, options) ;
         this._defaults = defaults;
@@ -26,7 +23,7 @@
 
 
     Plugin.prototype.canvasDroppable = function() {
-        $this = $(this.element);
+        var $this = $(this.element);
         $this.droppable({
             //accept: ".square_btn",
             drop: function(event, ui) {
@@ -36,6 +33,7 @@
     }
 
     Plugin.prototype.initCustomEventHandler = function() {
+        var $this = $(this.element);
         $this.on("dragging", function(event, top, left, width, height) {
             var tmpGridSize = YHB.gridSize;
             var top_ = Math.round(top/tmpGridSize)*tmpGridSize,
@@ -68,19 +66,6 @@
     }
 
 
-    // public methods are defined here, only top level methods should be here
-    // if can be handled in each component(plugin), it should be handled there.
-
-    $.fn.reset = Plugin.prototype.reset = function() {
-        // TODO: clean all com(ponents) on the canvas
-    }
-
-    $.fn.save = Plugin.prototype.save = function() {
-        // TODO: save all coms on the canvas
-        //alert($this.children(".component").outerHTML());
-        $this.children(".component").trigger("save");
-        //$("#com0").trigger("save");
-    }
 
 
 

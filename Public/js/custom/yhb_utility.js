@@ -1,7 +1,7 @@
 ;(function ( $, window, document, undefined ) {
 
+    //此处的变量将被所有的插件的实例共用，所以此处变量仅限于共用变量
     var pluginName = 'yhb_utility',
-        plugin,
         defaults = {
             componentName: "",
             canvasId: "canvas",
@@ -10,16 +10,14 @@
             widthInGrid: "8",
             heightInGrid: "6",
             callback: function(str) {}
-        },
-        $this;
+        };
 
     // The actual plugin constructor
     function Plugin( element, options ) {
-        plugin = this;
         this.options = $.extend( {}, defaults, options) ;
         this._defaults = defaults;
         this._name = pluginName;
-        $this = $(element);
+        this.element = element;
 
         this.init();
     }
@@ -34,8 +32,8 @@
     // this will bind click and drag event to the components in the panel
     Plugin.prototype.initBind = function() {
         $canvas = $("#"+this.options.canvasId);
-
-        $this.draggable({
+        var plugin = this;
+        $(this.element).draggable({
             // set grid as basic unit for move
             appendTo: "body",
             //grid: [ YHB.gridSize, YHB.gridSize ],
@@ -59,7 +57,8 @@
 
 
     Plugin.prototype.initCustomEventHandler = function() {
-        $this.on("dropped", function(event, ui){
+        var plugin = this;
+        $(this.element).on("dropped", function(event, ui){
             // transfer control to each component plugins 
             // 每个com进行初始自己的html，并绑定相应的事件
             var comid = "com"+YHB.comCount.getCount();

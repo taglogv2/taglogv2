@@ -5,12 +5,9 @@
 
 ;(function ( $, window, document, undefined ) {
 
+    //此处的变量将被所有的插件的实例共用，所以此处变量仅限于共用变量
     var pluginName = 'yhb_single_image',
-        plugin,
-        $this,
         $canvas,
-        htmlObj,
-        cssObj,
         defaults = {
             canvasId: "your_canvas",
             editorId: "your_editor",
@@ -28,14 +25,12 @@
 
     // 构造函数
     function Plugin( element, options ) {
-        plugin = this;
         this.element = element;
         this.options = $.extend( {}, defaults, options) ;
+        $canvas = $("#"+this.options.canvasId);
         this._defaults = defaults;
         this._name = pluginName;
-        htmlObj = this.htmlTpl();
-        $this = $(element);
-        $canvas = $("#"+this.options.canvasId);
+        this.htmlObj = htmlTpl(this);
         this.init();
     }
 
@@ -43,39 +38,46 @@
     // 如果是从右侧utilitydrag过来的，那么需要先append到canvas上，然后再进行绑定；
     // 如果重新编辑原来已有的( 例如，从后台加载过来的)，那么可以直接进行事件绑定，但是为了保持统一，需要对htmlObj进行初始化
     Plugin.prototype.init = function () {
+        var $this = $(this.element);
         // 对于新加入的com，$this需要重新指定，对于已有的com，htmlObj需要初始化
         if(this.options.newlyAdded) {
             // 新增加一个com到canvas
             this.addComToCanvas();
         } else {
             // 从canvas中找到该com
-            htmlObj.leftInGrid($this.css("left"));
-            htmlObj.topInGrid($this.css("top"));
+            this.htmlObj.leftInGrid($this.css("left"));
+            this.htmlObj.topInGrid($this.css("top"));
         }
         this.comBind($this.attr("id"));
-        this.saveEventHandler();
+        //this.saveEventHandler();
     };
 
     Plugin.prototype.addComToCanvas = function() {
-        htmlObj.leftInGrid(this.options.initialLeftInGrid);
-        htmlObj.topInGrid(this.options.initialTopInGrid);
-        htmlObj.saved(false);
-        htmlObj.id($(this.element).attr("id"));
-        //alert(htmlObj.html());
-        $(htmlObj.html()).appendTo($canvas);
+        this.htmlObj.leftInGrid(this.options.initialLeftInGrid);
+        this.htmlObj.topInGrid(this.options.initialTopInGrid);
+        this.htmlObj.saved(false);
+        this.htmlObj.id($(this.element).attr("id"));
+        this.preSave();
+        //alert(this.htmlObj.html());
+        $(this.htmlObj.html()).appendTo($canvas);
     };
 
 
-    Plugin.prototype.saveEventHandler = function() {
-        var comid = $this.attr("id");
-        $("#"+comid).on("save", function() {
-            
-            if(!htmlObj.saved()) {
-                alert(htmlObj.html());
-                //plugin.options.callback(htmlObj.html());
-            }
-        });
-    };
+    Plugin.prototype.preSave = function() {
+        YHB.needToSave[this.htmlObj.id()] = {html:this.htmlObj.html(), page:YHB.currentPage};
+        //alert(JSON.stringify(YHB.needToSave));
+    }
+
+    //Plugin.prototype.saveEventHandler = function() {
+    //    var comid = $(this.element).attr("id");
+    //    var plugin = this;
+    //    $("#"+comid).on("save", function(event, postUrl) {
+    //        if(!plugin.htmlObj.saved()) {
+    //            //alert(plugin.htmlObj.html());
+    //            //alert("pageID: "+YHB.currentPage+" "+YHB.currentProduct);
+    //        }
+    //    });
+    //};
 
 
     // all related events should be handle here instead of in top level
@@ -85,9 +87,10 @@
 
         // handle click event
         //$("#"+plugin.options.editorId+" span").trigger("click");
+        var plugin = this;
         $("#"+comid).on("click", function() {
             // notice there must be an span element to trigger click correctly
-            if(comid != YHB.currentComId || !htmlObj.saved()) {
+            if(comid != YHB.currentComId || !plugin.htmlObj.saved()) {
                 setCurrentComId(comid);
                 plugin.clearEditPanel();
                 plugin.setupEditPanel(comid);
@@ -101,7 +104,7 @@
     };
 
     Plugin.prototype.clearEditPanel = function() {
-        var editorPageId = $("#"+plugin.options.editorId).attr("href");
+        var editorPageId = $("#"+this.options.editorId).attr("href");
         var $editorPage = $(""+editorPageId);
         $editorPage.empty();
     };
@@ -109,7 +112,7 @@
     Plugin.prototype.setupEditPanel = function(comid) {
         //alert(comid);
         // add edit ops into editor page
-        var editorPageId = $("#"+plugin.options.editorId).attr("href");
+        var editorPageId = $("#"+this.options.editorId).attr("href");
         var $editorPage = $(""+editorPageId);
 
         // add editor information
@@ -128,11 +131,12 @@
         );
 
         // communicate with resource panel
+        var that = this;
         $editorPage.find("#select-image-id").on("click", function() {
-            $("#"+plugin.options.resourceId).modal('toggle');
-            $("#"+plugin.options.resourceId).find("#confirm-id").one("click", function(event) {
-                plugin.changeURL(YHB.currentComId, $("#"+plugin.options.resourceId).find("#url-input-id").val());
-                $("#"+plugin.options.resourceId).modal('toggle');
+            $("#"+that.options.resourcePanelId).modal('toggle');
+            $("#"+that.options.resourcePanelId).find("#confirm-id").one("click", function(event) {
+                that.changeURL(YHB.currentComId, $("#"+that.options.resourcePanelId).find("#url-input-id").val());
+                $("#"+that.options.resourcePanelId).modal('toggle');
             });
         });
 
@@ -146,6 +150,7 @@
 
 
     Plugin.prototype.bindDraggable = function(comid) {
+        var plugin = this;
         $("#"+comid).draggable({
             //grid: [ YHB.gridSize, YHB.gridSize ],
             opacity: 0.4,
@@ -161,9 +166,10 @@
                     "left": Math.round(ui.position.left/YHB.gridSize)*YHB.gridSize, 
                     "top":Math.round(ui.position.top/YHB.gridSize)*YHB.gridSize
                 }, function() {
-                    htmlObj.leftInGrid(Math.round(ui.position.left/YHB.gridSize));
-                    htmlObj.topInGrid(Math.round(ui.position.top/YHB.gridSize));
-                    htmlObj.saved(false);
+                    plugin.htmlObj.leftInGrid(Math.round(ui.position.left/YHB.gridSize));
+                    plugin.htmlObj.topInGrid(Math.round(ui.position.top/YHB.gridSize));
+                    plugin.htmlObj.saved(false);
+                    plugin.preSave();
                 });
             },
             drag: function(event, ui) {
@@ -174,16 +180,16 @@
     };
 
     Plugin.prototype.bindResizable = function(comid) {
-        
+        var plugin = this;
         $("#"+comid).resizable({
             start: function() {
                 setCurrentComId(comid);
             },
             stop: function(event, ui) {
-                htmlObj.widthInGrid(Math.round(ui.helper.width()/YHB.gridSize));
-                htmlObj.heightInGrid(Math.round(ui.helper.height()/YHB.gridSize));
-                htmlObj.saved(false);
-                //alert(Math.round(ui.helper.height()/YHB.gridSize));
+                plugin.htmlObj.widthInGrid(Math.round(ui.helper.width()/YHB.gridSize));
+                plugin.htmlObj.heightInGrid(Math.round(ui.helper.height()/YHB.gridSize));
+                plugin.htmlObj.saved(false);
+                plugin.preSave();
             },
             // set grid as basic unit for move
             // TODO： 此处有问题，高度随着缩放的次数而逐渐变小，可能的原因是jquery resizable插件里面height设置有问题
@@ -194,16 +200,16 @@
 
     // after drag to canvas, need combind events, like click, 
     Plugin.prototype.comBind = function(comid) {
-        plugin.bindDraggable(comid);
-        plugin.bindResizable(comid);
-        plugin.bindEvent(comid); 
+        this.bindDraggable(comid);
+        this.bindResizable(comid);
+        this.bindEvent(comid); 
     };
 
 
 
 
-   //组件的 html 代码
-    Plugin.prototype.htmlTpl = function() {
+    //组件的 html 代码
+    var htmlTpl = function(plugin) {
         var saved = true,
             id = "tmp",
             imgSrc = "./Public/css/img/empty_image-72.jpg",
