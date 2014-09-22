@@ -24,23 +24,10 @@
 <title>我的说明书 - 说明书编辑</title>
 </head>
 <body class="edit-builder">
-	<!--st head-navigator-->
-	<div class="head">
-		<a class="head-logo" href="__ROOT__">
-				<img src="Public/css/img/yhb_logo.png">
-		</a>
-		<div class="head-nav flr">
-			<a>
-				<i class="glyphicon glyphicon-cog"></i>刘昕<b class="caret"></b>
-			</a>
-			<a href=""><i class="glyphicon glyphicon-bell"></i>通知</a>
-			<a href=""><i class="glyphicon glyphicon-book"></i>我的说明书</a>
-		</div>
-	</div>
-	<!--end -->
+	<include file="Public:head"/>
 	<!-- left-navigator -->
 	<div class="left-nav">
-			<a class="left-nav-slider" id="upload-img-btn">
+			<a class="left-nav-slider" id="add-page-btn">
 				<span class="left-nav-icon"><i class="glyphicon glyphicon-plus"></i></span>
 				<span class="left-nav-text">新建一页</span>
 			</a>
@@ -81,6 +68,7 @@
 				<div id="canvas">
 
 					<button class="text-button">text-button</button>
+					<button class="image-button">image-button</button>
 					<div class="component cmp-image">
 						<div class="component-inner">
 							<div class="component-head">
@@ -135,7 +123,7 @@
 				</div>
 
 				<div class="editor-content tab-content">
-					  <div class="tab-pane fade" id="edit-page">
+					 <div class="tab-pane fade" id="edit-page">
 					  	<div class="edit-page">
 					  		<!--basic setting of pages  -->
 					  		<div class="edit-group">
@@ -282,7 +270,7 @@
 					  	</div>
 					  	<div class="tab-pane fade in active" id="edit-component">
 					  	<!-- st edit-slider slide from right when click event is trigged -->
-					  	 	<div class="edit-slider edit-slider-back edit-slider-hidden">
+					  	 	<div class="edit-slider-front">
 					  		<div class="edit-component edit-component-text">
 					  			<div class="edit-group edit-text">
 							  		<div class="edit-group-row">
@@ -363,15 +351,15 @@
 							  	</div>
 					  		</div> 
 					  		</div>
-					  	</div>
-					  	<div class="edit-slider">
+
+					  	<div class="edit-slider-back">
 					  		<div class="edit-component">
 						  		<div class="edit-group">
 								  		<div class="edit-group-title">图片设置</div>
 								  		<div class="edit-group-row">
 									  		<div class="edit-group-col">
 										  		<div class="edit-option">
-										  			<button class="btn btn-primary">上传图片</button>
+										  			<button class="btn btn-primary" id="upload-img-btn">上传图片</button>
 										  			<button class="btn btn-primary">更多图片</button>
 										  		</div>
 										  	</div>
@@ -452,9 +440,16 @@
 		</div>	
 	</div>
 
-	<div id="upload-img-overlay" class="close-upload-modal"></div>
+	<div id="upload-img-overlay" class="close-upload-modal">
+		
+	</div>
 	<!-- end -->
 	<!-- add page modal -->
+	<div id="add-page-modal">
+		<div id="close-page-btn" class="radius50">
+			x
+		</div>
+	</div>
 	<!-- end -->
 	<script type="text/javascript">
 	$(document).ready(function() {
@@ -476,8 +471,7 @@
   		$('#canvas').niceScroll({cursorwidth:8});
   		$('.editor-content').niceScroll({cursorwidth:8});
 
-	});
-		/* colorpicker */
+  		/* colorpicker */
 		$('.edit-colpick').colpick({
 			colorScheme : 'dark',
 			onSubmit:function(hsb,hex,rgb,el) {
@@ -497,17 +491,27 @@
 			$('#upload-img-modal').addClass('upload-img-hide');
 			$('#upload-img-overlay').hide();
 		});
-
-		/* edit-slider put this in the click method of the component in canvas
-	     * add a new page and add component editors in the page then let it slide in 
-		 * <div class="edit-slider edit-slider-hidden">some editors of the specific component</div> 
-		 */
-		$('.text-button').click(function(){
-			$('.edit-slider-back').show().addClass('edit-slidein');
-			setTimeout(function(){
-				$('.edit-slider-back').removeClass('edit-slider-hidden').removeClass('edit-slidein');
-			},1000)
+		/* edit-page fadeIn&fadeOut */
+		$('.image-button').click(function(){
+			$('.edit-slider-front').fadeOut(200,function(){
+				$('.edit-slider-back').fadeIn(200);
+			});
 		});
+		$('.text-button').click(function(){
+			$('.edit-slider-back').fadeOut(200,function(){
+				$('.edit-slider-front').fadeIn(200);
+			});
+		});
+		/* add-page-modal */
+		$('#add-page-btn').click(function(){
+			$('#add-page-modal').addClass('add-page-show');
+		});
+		$('#close-page-btn').click(function(){
+			$('#add-page-modal').removeClass('add-page-show');
+		});
+
+	});
+		
 	</script>
 </body>
 </html>

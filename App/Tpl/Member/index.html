@@ -4,12 +4,16 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>用户宝</title>
-<meta name="keywords" content="视频说明书，电子说明书，二维码，二维码说明书，二维码链接，专业说明书平台，说明书，说明书引擎，免费视频">
-<meta name="description" content="不只是电子化的产品说明书，而是动态的、全方位的产品描述平台。让消费者为您传播品牌，让口碑“转”起来。扫描即可浏览，让用户更直观地理解你的产品与品牌文化">
-<link rel="shortcut icon" href="./favicon.png"/>
-<link href="http://yhb360.qiniudn.com/css/bootstrap.min.css" rel="stylesheet">
-<link href="http://yhb360.qiniudn.com/css/style.css" rel="stylesheet">
+<script type="text/javascript" src="Public/js/jquery-1.9.0.min.js"></script>
+<script type="text/javascript" src="Public/js/jquery-ui-1.10.0.custom.min.js"></script>
+<link rel="stylesheet" href="Public/css/bootstrap/css/bootstrap.min.css"/>
+<script type="text/javascript" src="Public/css/bootstrap/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="./css/font-awesome/css/font-awesome.min.css" />
+
+<script type="text/javascript" src="./js/nicescroll/jquery.nicescroll.min.js	"></script>
+
+<link rel="stylesheet" href="Public/css/style.css"/>
 <script type="text/javascript">
 	var browserInfo = {browser:"", version: ""};
 	var ua = navigator.userAgent.toLowerCase();
@@ -22,112 +26,220 @@
 		}
 	}
 </script>
-<script src="http://yhb360.qiniudn.com/js/jquery-1.9.0.min.js"></script>
-<script src="http://yhb360.qiniudn.com/js/layer/layer.min.js"></script>
-<script src="http://yhb360.qiniudn.com/js/bootstrap.js"></script>
+
 </head>
-<body class="no_index">
-    <include file="Public:top"/>
-    <div class="naver">
-         <div class="w980">
-            <a href="javascript:void(0)" class="input_botton" style="padding:0px 10px;"><input type="checkbox" id="check_all" /><span>全选</span></a>
-            <a href="javascript:void(0)" id="sele_del" class="input_botton" style="padding:0px 10px;"><img src="http://yhb360.qiniudn.com/images/delete_ico.png"><span>删除</span></a>
-        </div>
-    </div>
-    <div class="w980 main_table">
-        <div class="main_table_left">
-            <a class="main_table_title" href="{:U('product/add')}"><img src="http://yhb360.qiniudn.com/images/add_ico.png"> 点击这里新建一份说明书</a>
-            <table class="table table-striped">
-			<volist name="productlist" id="product">
-                <tr id="product{$product.product_id}">
-                    <td width="5%"><input type="checkbox" class="check_list" name="product_id[]" value="{$product['product_id']}"/></td>
-                    <td width="45%"><a href="{:U('product/view', 'product_id='.$product['product_id'])}" title="{$product.name}">{$product.name|msubstr=0,19}</a></td>
-					<td width="20%">
-                        <div class="btn-group">
-                            <button id="category_name{$product['product_id']}" class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" >
-							<span><empty name="product['category']">
-								默认分类
-							<else />
-								{$product.category.name}
-							</empty></span>
-							<span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-								<volist name="categorylist" id="category">
-								<li><a class="category" rel="{$category.category_id}" rev="{$product['product_id']}" href="#">{$category.name}</a></li>
-								</volist>
-                            </ul>
-                        </div>
-                    </td>
-                    <td width="30%">
-						<a href="{:U('product/edit', 'product_id='.$product['product_id'])}" class="input_botton"><img src="http://yhb360.qiniudn.com/images/edit_ico.png"><span>编辑</span></a>
-						<a href="{:U('product/view', 'product_id='.$product['product_id'])}" class="input_botton"><img src="http://yhb360.qiniudn.com/images/view_ico.png"><span>查看</span></a>
-						<a href="javascript:void(0)" rel="{$product.product_id}" class="input_botton del_product"><img src="http://yhb360.qiniudn.com/images/delete_ico.png"><span>删除</span></a>
-					</td>
-                </tr>
-			</volist>
-			</table>
-        </div>
-        <div class="main_table_right">
-			<div class="right_box">
-                <a href="{:U('member/index','categoryid=default')}" title="默认分类">默认分类</a>
-            </div>
+<body class="overflow-hidden">
+    <include file="Public:head"/>
+    <div class="left-pane">
+    	<a href="{:U('product/add')}" class="add-sms-btn btn btn-primary"><span>新建说明书</span></a>
+    	<ul class="left-category">
+    		<li class="active">
+    			<a href="{:U('member/index')}">
+    				全部分类<span class="category-num">10</span>
+    			</a>
+    		</li>
 			<volist name="categorylist" id="category">
-            <div class="right_box">
-                <a href="{:U('member/index','categoryid='.$category['category_id'])}" title="{$category.name}">{$category.name}</a>
-                <div class="edit_box">
-                <a href="javascript:void(0)" rel="{$category.category_id}" class="edit"></a><a href="javascript:void(0)" rel="{$category.category_id}" class="delete"></a>
-                </div>
-            </div>
-			</volist>
-            <div class="right_box"><a href="javascript:void(0)" id="add_product_category" class="add">新增分类</a></div>
-        </div>
-        <div class="clear"></div>
+    			<li>
+    				<a href="{:U('member/index','categoryid='.$category['category_id'])}" title="{$category.name}">{$category.name}<span class="category-num">4</span></a>
+    				<span class="edit-box">
+                			<span data-category="{$category.category_id}" title="修改分类名称" class="category-edit"><i class="glyphicon glyphicon-pencil"></i></span>
+                			<span data-category="{$category.category_id}" title="删除分类" class="category-delete"><i class="glyphicon glyphicon-remove"></i></span>
+                	</span>
+                	
+    			</li>
+    	</volist>
+    	</ul>
+    	<a href="javascript:void(0)" id="add_product_category" class="add add-category">新建分类<i class="glyphicon glyphicon-plus"></i></a>
     </div>
+    <div class="category-wrapper">
+    	<div class="category-inner">
+	    	<div class="category-head">
+	    		<div class="clearfix">
+		    		<div class="category-head-title">
+		    			<h3>我的说明书 - 全部</h3>
+		    		</div>
+		    		<div class="category-search">
+		    			<form>
+		    				<input name="search" type="text" placeholder="搜索说明书">
+		    				<button type="submit"><i class="fa fa-search"></i></button>
+		    			</form>
+		    		</div>
+	    		</div>
+	    	</div>
+	    	<div class="category-content">
+		    	<div class="category-content-inner">
+		    	<table class="table">
+				  	<thead> 
+						<tr>
+							<th>
+								<input type="checkbox" id="check_all">
+							</th>
+							<th width="15%">标题</th>
+							<th width="25%">描述</th>
+							<th>分类</th>
+							<th>
+								<div class="th-dropdown">浏览次数<b class="caret"></b>
+									<ul>
+										<li><a title="升序" href="{:U('member/index','order=hits_up&'.$parameter)}">升序排列<i <if condition="$_GET['order'] == 'hits_up'">style="color:#FF780F;"</if> class="fa fa-arrow-up"></i></a></li> 
+										<li><a title="降序" href="{:U('member/index','order=hits_down&'.$parameter)}">降序排列<i <if condition="$_GET['order'] == 'hits_down'">style="color:#FF780F;"</if> class="fa fa-arrow-down"></i></a></li>
+									</ul>
+								</div>
+							</th>
+							<th>
+								<div class="th-dropdown">
+								更新时间<b class="caret"></b>
+								<ul>
+									<li><a title="升序" href="{:U('product/index','order=ut_up&'.$parameter)}">升序排列<i <if condition="$_GET['order'] == 'ut_up'">style="color:#FF780F;"</if> class="fa fa-arrow-up"></i></a></li> 
+									<li><a title="降序" href="{:U('product/index','order=ut_down&'.$parameter)}">降序排列<i <if condition="$_GET['order'] == 'ut_down'">style="color:#FF780F;"</if> class="fa fa-arrow-down"></i></a></li>
+								</ul>
+								</div>
+							</th> 
+							<th>
+								<div class="th-dropdown">
+								创建时间<b class="caret"></b>
+								<ul>
+									<li><a title="升序" href="{:U('member/index','order=ct_up&'.$parameter)}">升序排列<i class="fa fa-arrow-up ".<if condition="$_GET['order'] == 'ct_up'">active</if>"></i></a></li>
+									<li><a title="降序" href="{:U('member/index','order=ct_down&'.$parameter)}">降序排列<i <if condition="$_GET['order'] == 'ct_down'">style="color:#FF780F;"</if> class="fa fa-arrow-down"></i></a></li>
+								</ul>
+								</div>
+							</th> 
+							<th>
+								<div class="th-dropdown">最近浏览<b class="caret"></b>
+									<ul>
+										<li><a title="升序" href="{:U('member/index','order=lt_up&'.$parameter)}">升序排列<i <if condition="$_GET['order'] == 'lt_up'">style="color:#FF780F;"</if> class="fa fa-arrow-up"></i></a></li>
+										<li><a title="降序" href="{:U('member/index','order=lt_down&'.$parameter)}">降序排列<i <if condition="$_GET['order'] == 'lt_down'">style="color:#FF780F;"</if> class="fa fa-arrow-down"></i></a></li>
+									</ul>
+								</div>
+							</th>
+							<th>操作</th>
+						</tr>
+				    </thead>
+					<tbody>
+						<if condition="$productlist eq null">
+							<tr>
+								<if condition="!$_GET['content']">
+									<td colspan="9">----暂无数据！----</td>
+								<else />
+									<td colspan="8">----暂无数据！----</td>
+								</if>
+							</tr>
+						<else/>
+							<volist name="productlist" id="vo">
+								<tr>
+									<td>
+										<input name="product_id[]" class="check_list" type="checkbox" value="{$vo.product_id}"/>
+									</td>
+									<td>
+										<a target="_blank" href="index.php?m=product&a=view&product_id={$vo['product_id']}">{$vo.name}</a>
+									</td>
+									<td>{$vo.description|msubstr=###,0,50}</td>
+									<td>{$vo.category.name}</td>
+									<td>{$vo.hits}</td>
+									<td><if condition="$vo['update_time'] gt 0">{$vo.update_time|date="Y-m-d H:i",###}</if></td>
+									<td><if condition="$vo['create_time'] gt 0">{$vo.create_time|date="Y-m-d H:i",###}</if></td>
+									<td><if condition="$vo['last_view_time'] gt 0">{$vo.last_view_time|date="Y-m-d H:i",###}</if></td>
+									<td>
+										<a href="{:U('product/edit', 'product_id='.$product['product_id'])}">
+											编辑
+										</a>
+			                            <a id="category_name{$product['product_id']}" data-toggle="dropdown" >
+										<span><empty name="product['category']">
+											分类
+										<else />
+											{$product.category.name}
+										</empty></span>
+										<!-- <span class="caret"></span>
+										<ul class="dropdown-menu">
+											<volist name="categorylist" id="category">
+											<li><a class="category" rel="{$category.category_id}" rev="{$product['product_id']}" href="#">{$category.name}</a></li>
+											</volist>
+	                            		</ul> -->
+			                            </a>
+
+										<a href="{:U('product/view', 'product_id='.$vo['product_id'])}">查看
+										</a>
+										<a data-product="{$vo.product_id}" class="input_botton del_product">删除</a>
+									</td>
+								</tr>
+							</volist>
+						</if>
+					</tbody>
+				</table>
+				<div class="category-paginition"> 
+					<ul class="pagination">
+				      <li class="disabled"><a href="#">首页</a></li>
+				      <li class="active"><a href="#">上一页</a></li>
+				      <li><a href="#">1<span class="sr-only">(current)</span></a></li>
+				      <li><a href="#">2</a></li>
+				      <li><a href="#">3</a></li>
+				      <li><a href="#">4</a></li>
+				      <li><a href="#">5</a></li>
+				      <li><a href="#">下一页</a></li>
+				      <li><a href="#">末页</a></li>
+				   </ul>
+				</div>
+			</div>
+
 	<script type="text/javascript">
+		// @variable temp :used in edit_category input
 		var add_temp = '';
+		// @variable temp :used in add_category input 
 		var temp = '';
+		var cataHtml = function(id,val){
+				return '<li><a href="{:U("member/index","categoryid=")}' + id + '" title="'+val+'">'+val+'<span class="category-num">0</span></a><span class="edit-box"><span data-category="'+id+'" title="修改分类名称" class="category-edit"><i class="glyphicon glyphicon-pencil"></i></span><span data-category="'+id+'" title="删除分类" class="category-delete"><i class="glyphicon glyphicon-remove"></i></span></span></li>';
+			}
+
 		function ajax_add_category(obj){
-			if($(obj).val() != temp && $(obj).val() != '' && $(obj).val() != '请输入名称'){
+			if($(obj).val() != ''){
 				temp = $(obj).val();
-				$.post('{:U("category/add")}',{name:$(obj).val()},function(data){
+				$.post(
+					'{:U("category/add")}',
+					{name:$(obj).val()},
+					function(data){
 					if(data.status == '1'){
-						$(obj).parent().html('<a href="{:U("member/index","categoryid=")}' + data.data + '" title="'+$(obj).val()+'">'+ $(obj).val()+'</a><div class="edit_box"><a href="javascript:void(0)" rel="'+data.data+'" class="edit"></a><a href="javascript:void(0)" rel="'+data.data+'" class="delete"></a></div>');
-						location.reload();
+						console.log(data);
+						$(obj).prev().prev().append(cataHtml(data.data,$(obj).val()));
+						$(obj).remove();
 					}else{
-						layer.alert(data.info,1);
-						//alert(data.info);
-						$(obj).parent().remove();
+						console.log(data);
+						alert(data.info +' 保存失败，请稍候尝试');
+						$(obj).remove();
 					}
 				});
 			}else if($(obj).val() == ''){
-				$(obj).parent().remove();
+				$(obj).remove();
 			}else if($(obj).val() == '请输入名称'){
-				$(obj).parent().remove();
+				$(obj).remove();
 			}
 			return true;
 		}
+		//edit category @param obj input element
 		function ajax_edit_category(obj){
 			var cat_name = $.trim($(obj).val());
+			//if changed
 			if(cat_name != '' && cat_name != add_temp){
-				$.post('{:U("category/edit")}',{id:$(obj).attr('rel'),name:cat_name},function(data){
+				$.post('{:U("category/edit")}',
+					{id:$(obj).attr('data-category'),name:cat_name},
+					function(data){
 					if(data.status == 1){
-						$(obj).before('<a href="{:U("member/index","categoryid=")}' + data.data + '">'+ cat_name+'</a>');
+						$(obj).before(cataHtml(data.data,cat_name));
 						$(obj).remove();
 						//alert(data.info);
-						location.reload();
 					}else{
-						$(obj).before('<a href="{:U("member/index","categoryid=")}' + $(obj).attr('rel') + '">'+ add_temp+'</a>');
+						$(obj).before(cataHtml(data.data,add_temp));
 						$(obj).remove();
-						layer.alert(data.info,-1);
+						alert(data.info,-1);
 					}
 				});
+			//input == ''
 			}else if(cat_name == ''){
-				$(obj).before('<a href="{:U("member/index","categoryid=")}' + $(obj).attr('rel') + '">'+ add_temp+'</a>');
+				$(obj).before(cataHtml($(obj).attr('data-category'),add_temp));
 				$(obj).remove();
-				layer.alert('分类名不能为空:-)',-1);
-			}else{
-				$(obj).before('<a href="{:U("member/index","categoryid=")}' + $(obj).attr('rel') + '">'+ add_temp+'</a>');
+				alert('分类名不能为空:-)',-1);
+			}
+			//no changes in inputs
+			else{
+				$(obj).before(cataHtml($(obj).attr('data-category'),add_temp));
 				$(obj).remove();
 			}
 			return true;
@@ -148,65 +260,62 @@
 		}
 		
 		$(function(){
-			if($('.main_table_left').height() < $('.main_table').height()){
-				$('.main_table_left').height($('.main_table').height());
-			}
+
 			$("#check_all").click(function(){
 				$("input[class='check_list']").prop('checked', $(this).prop("checked"));
 			});
+	/* start category-controls */
 			$("#add_product_category").click(function(){
 				if($('#add_category').length != 0){
 					$('#add_category').focus();
 				}else{
-					$(this).parent().before('<div class="right_box"><input type="text" id="add_category" maxlength="12" value="请输入名称"  onkeypress="pressEnter(this,event)"   onblur="ajax_add_category(this)"></div>');
+					$(this).after('<input type="text" id="add_category" maxlength="12" placeholder="请输入名称"  onkeypress="pressEnter(this,event)" onblur="ajax_add_category(this)" />');
 					$('#add_category').focus().select();
 				}
 			});
+			//what is this doing
+			/*
 			$('.main_table_right').on('propertychange','#add_category', function(){
 				var str = $('#add_category').val();
 				var new_str = str.replace('请输入名称','');
 				$('#add_category').val(new_str);
 				$('#add_category').unbind('propertychange');
 			});
-			$('.main_table_right').on('mouseenter','.right_box',
-				function(){
-					$(this).find('.edit_box').show();
-				});
-			$('.main_table_right').on('mouseleave','.right_box',
-				function(){
-					$(this).find('.edit_box').hide();
-				}
-			);
-			$('.main_table_right').on('click','.delete',function(){
+			*/
+			//category-delete 
+			$('.left-category').on('click','.category-delete',function(){
 				var obj = this;
-				layer.confirm('确定要删除此分类？',
-					function(){
-						$.get('{:U("category/delete","id=")}' + $(obj).attr('rel'),function(data){
+				if(confirm('确定要删除此分类？')){
+						$.get(
+							'{:U("category/delete","id=")}' + $(obj).attr('data-category'),
+							function(data){
 							if(data.status == '1'){
 								$(obj).parent().parent().remove();
-								//alert(data.info);
-								location.reload();
 							}else{
-								layer.alert(data.info,-1);
-								//alert(data.info);
+								alert(data.info+'请稍候重试');
 							}
 						});
-						
-					}
-				);
+				}
 			});
-			
-			$('.main_table_right').on('click','.edit',function(){
-				add_temp = $(this).parent().prev().text();
-				var $html = '<input type="text" style="text-align: center;" maxlength="12" rel="'+ $(this).attr('rel') +'" value="'+ add_temp +'" id="edit_category" onkeypress="pressEditEnter(this,event)" onblur="ajax_edit_category(this)">';
-				$(this).parent().parent().children('a').remove();
-				$(this).parent().before($html);
+			//category-edit
+			$('.left-category').on('click','.category-edit',function(){
+				
+				//remove the num of span element in $(this)
+				var num = $(this).parent().prev().find('span').text().length;
+				add_temp = $(this).parent().prev().text().slice(0,-num);
+				
+				var $html = '<input type="text" style="padding-left:30px;" maxlength="12" data-category="'+ $(this).attr('data-category') +'" value="'+ add_temp +'" id="edit_category" onkeypress="pressEditEnter(this,event)" onblur="ajax_edit_category(this)">';
+				
+				$(this).parent().parent().before($html);
+				$(this).parent().parent().remove();
+				
 				$('#edit_category').focus();
 			});
-			
-			$('.category').click(function(){
+
+			//category-click
+			/*$('.category').click(function(){
 				var product_id = $(this).attr('rev');
-				var category_id = $(this).attr('rel');
+				var category_id = $(this).attr('data-category');
 				var content = $(this).text()+' <span class="caret"></span>';
 				$.get('{:U("product/changecategory")}' + '&category_id=' + category_id + '&product_id=' +product_id,function(data){
 					if(data.status == '1'){
@@ -216,21 +325,24 @@
 						layer.alert(data.info,-1);
 					}
 				});
-			});
-			
+			});*/
+	/* end category-controls */	
+	/* start product-controls */
+			//delete product
 			$('.del_product').click(function(){
-				var product_id = $(this).attr('rel');
-				layer.confirm('该说明书将不可恢复，确认要删除吗？',function(){
-					$.get('{:U("product/delete")}' + '&product_id=' +product_id,function(data){
+				var obj = this
+				var product_id = $(this).attr('data-product');
+				if(confirm('该说明书将不可恢复，确认要删除吗？')){
+					$.get('{:U("product/delete")}' + '&product_id=' +product_id,
+						function(data){
 						if(data.status == 1){
-							var category_name = 'product'+product_id;
-							$('#'+category_name).remove();
-							layer.msg('删除成功',1,1);
-						}else{
-							layer.alert(data.info,-1);
+							$(obj).parent().parent().remove();
+							alert('删除成功',1,1);
+						}else{console.log(data);
+							alert(data.info,-1);
 						}
 					});
-				})
+				}
 			});
 			
 			$('#sele_del').click(function(){
@@ -244,7 +356,7 @@
 					}
 				}); 
 				if(product_ids){
-					layer.confirm('说明书将不可恢复，确认要删除吗？',function(){
+					if(confirm('说明书将不可恢复，确认要删除吗？')){
 						$.get('{:U("product/delete")}' + '&product_ids=' +product_ids,function(data){
 							if(data.status == '1'){
 								//var product_id_array = product_ids.split(',');  
@@ -252,33 +364,18 @@
 									var category_name = 'product'+product_id_array[temp];
 									$('#'+category_name).remove();
 								}
-								layer.msg('删除成功',1,1);
+								alert('删除成功',1,1);
 							}else{
-								layer.alert(data.info,-1);
+								alert(data.info,-1);
 							}
 						});
-					})
-					/*if(confirm('说明书将不可恢复，确认要删除吗？')){
-						$.get('{:U("product/delete")}' + '&product_ids=' +product_ids,function(data){
-							if(data.status == '1'){
-								//var product_id_array = product_ids.split(',');  
-								for(var temp in product_id_array){
-									var category_name = 'product'+product_id_array[temp];
-									$('#'+category_name).remove();
-								}
-							}else{
-								layer.alert(data.info,-1);
-							}
-						});
-					}*/
+					}
 				}else{
-					layer.alert('请选择要删除的项:-)',-1);
+					alert('请选择要删除的项:-)',-1);
 				}
 				
 			});
 		});
 	</script>
-	<include file="Public:footer"/>
-	<include file="Public:feedback"/>
 </body>
 </html>

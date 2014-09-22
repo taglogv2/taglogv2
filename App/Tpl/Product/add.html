@@ -4,34 +4,518 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>用户宝</title>
-<meta name="keywords" content="视频说明书，电子说明书，二维码，二维码说明书，二维码链接，专业说明书平台，说明书，说明书引擎，免费视频">
-<meta name="description" content="不只是电子化的产品说明书，而是动态的、全方位的产品描述平台。让消费者为您传播品牌，让口碑“转”起来。扫描即可浏览，让用户更直观地理解你的产品与品牌文化">
-<link rel="shortcut icon" href="./favicon.png"/>
-<link href="http://yhb360.qiniudn.com/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="http://yhb360.qiniudn.com/css/uploadify.css">
-<link href="http://yhb360.qiniudn.com/css/style.css" rel="stylesheet">
-<script type="text/javascript">
-	var browserInfo = {browser:"", version: ""};
-	var ua = navigator.userAgent.toLowerCase();
-	if (window.ActiveXObject) {
-		browserInfo.browser = "IE";
-		browserInfo.version = ua.match(/msie ([\d.]+)/)[1];
-		if(browserInfo.version <= 7){
-			if(confirm("您的浏览器版本过低，请使用IE8及以上浏览器，或者firefox、chrome、360等浏览器;")){}
-			location.href = 'http://chrome.360.cn/';
-		}
-	}
-</script>
-<script src="http://yhb360.qiniudn.com/js/jquery-1.9.0.min.js"></script>
-<script src="http://yhb360.qiniudn.com/js/jquery-ui-1.10.0.custom.min.js"></script>
-<script src="http://yhb360.qiniudn.com/js/bootstrap.js"></script>
-<script src="http://yhb360.qiniudn.com/js/layer/layer.min.js"></script>
-<script src="http://yhb360.qiniudn.com/js/jquery.uploadify.min.js" type="text/javascript"></script>
-<script type="text/javascript" charset="utf-8" src="http://yhb360.qiniudn.com/js/ueditor/ueditor.config.js"></script>
-<script type="text/javascript" charset="utf-8" src="http://yhb360.qiniudn.com/js/ueditor/ueditor.all.min.js"> </script>
-<script type="text/javascript" charset="utf-8" src="http://yhb360.qiniudn.com/js/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript" src="Public/js/jquery-1.9.0.min.js"></script>
+<script type="text/javascript" src="Public/js/jquery-ui-1.10.0.custom.min.js"></script>
+<link rel="stylesheet" href="Public/css/bootstrap/css/bootstrap.min.css"/>
+<script type="text/javascript" src="Public/css/bootstrap/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="Public/css/font-awesome/css/font-awesome.min.css" />
+
+<script type="text/javascript" src="Public/js/nicescroll/jquery.nicescroll.min.js	"></script>
+
+<link rel="stylesheet" href="Public/js/summernote/summernote.css"/>
+<script type="text/javascript" src="Public/js/summernote/summernote.js"></script>
+
+<link rel="stylesheet" href="Public/js/colpick/css/colpick.css" />
+<script type="text/javascript" src="Public/js/colpick/js/colpick.js"></script>
+
+<script type="text/javascript" src="Public/js/edit.js"></script>
+<link rel="stylesheet" href="Public/css/style.css"/>
+<title>我的说明书 - 说明书编辑</title>
 </head>
+<body class="edit-builder">
+	<include file="Public:head"/>
+	<!-- left-navigator -->
+	<div class="left-nav">
+			<a class="left-nav-slider" id="add-page-btn">
+				<span class="left-nav-icon"><i class="glyphicon glyphicon-plus"></i></span>
+				<span class="left-nav-text">新建一页</span>
+			</a>
+		<!--page indexs the hover effect bug need to be fixed -->
+		<div id="left-nav-pages">
+					<a class="left-nav-slider">
+						<span class="left-nav-icon"><i class="glyphicon glyphicon-file"></i></span>
+						<span class="left-nav-text">第1页</span>
+					</a>
+					<a class="left-nav-slider">
+						<span class="left-nav-icon"><i class="glyphicon glyphicon-file"></i></span>
+						<span class="left-nav-text">第2页</span>
+					</a>
+					<a class="left-nav-slider">
+						<span class="left-nav-icon"><i class="glyphicon glyphicon-file"></i></span>
+						<span class="left-nav-text">第3页</span>
+					</a>
+		</div>
+
+		<div class="left-nav-controls">
+			<a class="left-nav-slider">
+				<span class="left-nav-icon"><i class="glyphicon glyphicon-floppy-disk"></i></span>
+				<span class="left-nav-text">保存</span>
+			</a>
+			<a class="left-nav-slider">
+				<span class="left-nav-icon"><i class="glyphicon glyphicon-ok"></i></span>
+				<span class="left-nav-text">生成二维码</span>
+			</a>
+		</div>
+		
+	</div>
+	<!-- end -->
+	<!-- st edit-wrapper -->
+	<div class="edit-wrapper">
+		<!-- left column of the preview section -->
+		<div class="col-5 canvas-wrapper">
+			<div class="canvas-board">
+				<div id="canvas">
+
+					<button class="text-button">text-button</button>
+					<button class="image-button">image-button</button>
+					<div class="component cmp-image">
+						<div class="component-inner">
+							<div class="component-head">
+								<div class="component-btn">
+									<i class="glyphicon glyphicon-trash"></i>
+								</div>
+							</div>
+							<div class="component-preview">
+								<div class="preview-box image-preview">
+									<img>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="component cmp-text">
+						<div class="component-inner">
+							<div class="component-head">
+								<div class="component-btn">
+									<i class="glyphicon glyphicon-trash"></i>
+								</div>
+							</div>
+							<div class="component-preview">
+								<div class="preview-box text-preview">请在右侧编辑文字内容Blablabla</div>
+							</div>
+						</div>
+					</div>
+					<div class="component cmp-video">
+						<div class="component-inner">
+							<div class="component-head">
+								<div class="component-btn">
+									<i class="glyphicon glyphicon-trash"></i>
+								</div>
+							</div>
+							<div class="component-preview">
+								<div class="preview-box video-preview"></div>
+							</div>
+						</div>
+					</div>
+				</div> 
+			</div>
+		</div>
+		<!-- right column of the editor -->
+		<div class="col-5 editor-wrapper">
+			<div class="editor-board">
+				<div class="editor-head">
+					<!-- tab-navigator -->
+					<ul id="editor-tab" role="tablist">
+					    <li><a href="#edit-page" role="tab" data-toggle="tab">编辑页面</a></li>
+					    <li><a href="#add-component" role="tab" data-toggle="tab">添加组件</a></li>
+					    <li class="active"><a href="#edit-component" role="tab" data-toggle="tab">编辑组件</a></li>
+					</ul>
+				</div>
+
+				<div class="editor-content tab-content">
+					 <div class="tab-pane fade" id="edit-page">
+					  	<div class="edit-page">
+					  		<!--basic setting of pages  -->
+					  		<div class="edit-group">
+					  			<div class="edit-group-title">基础设置</div>
+						  		<div class="edit-group-row">
+							  		<div class="edit-group-col">
+								  		<div class="edit-header">
+								  			背景色
+								  		</div>
+								  		<div class="edit-option">
+								  			<button class="edit-colpick"><span>无</span><b class="caret"></b></button>
+								  		</div>
+							  		</div>
+							  		<div class="edit-group-col">
+								  		<div class="edit-header">
+								  			页内边距
+								  		</div>
+								  		<div class="edit-option">
+								  			<select>
+								  				<option>无</option>
+								  				<option>大</option>
+								  				<option>中</option>
+								  				<option>小</option>
+								  			</select>
+								  		</div>
+								  	</div>
+								  	<div class="edit-group-col">
+								  		<div class="edit-header">
+								  			页外边距
+								  		</div>
+								  		<div class="edit-option">
+								  			<select>
+								  				<option>无</option>
+								  				<option>大</option>
+								  				<option>中</option>
+								  				<option>小</option>
+								  			</select>
+								  		</div>
+							  		</div>
+							  	</div>
+						  		<div class="edit-group-row edit-background">
+							  		<div class="edit-header">
+							  			背景图片
+							  		</div>
+							  		<div class="edit-option">
+							  			<ul>
+											<li>
+												<div>
+													<img src>
+												</div>
+											</li>
+											<li>
+												<div>
+													<img src>
+												</div>
+											</li>
+											<li>
+												<div>
+													<img src>
+												</div>
+											</li>
+											<li>
+												<div>
+													<img src>
+												</div>
+											</li>							  				
+							  			</ul>
+							  		</div>
+							  		<button class="btn btn-primary">更多背景</button> 
+							  		<button class="btn btn-primary">上传背景</button> 
+							  	</div>
+							  	</div>
+							  	<!-- page transition effects -->
+							  	<div class="edit-group">
+							  		<div class="edit-group-title">换页效果</div>
+							  		<div class="edit-group-row">
+							  			<ul>
+							  				<li>
+							  					<label class="radio">
+							  						<input type="radio" name="page-effects" value="滑入" data-toggle="radio" class="custom-radio">
+							  						滑入
+							  					</label>
+							  				</li>
+							  				<li>
+							  					<label class="radio">
+							  						<input type="radio" name="page-effects" value="淡入" data-toggle="radio" class="custom-radio">
+							  						淡入
+							  					</label>
+							  				</li>
+							  				<li>
+							  					<label class="radio">
+							  						<input type="radio" name="page-effects" value="弹出" data-toggle="radio" class="custom-radio">
+							  						弹出
+							  					</label>
+							  				</li>
+							  				<li>
+							  					<label class="radio">
+							  						<input type="radio" name="page-effects" value="滚动" data-toggle="radio" class="custom-radio">滚动
+							  					</label>
+							  				</li>
+							  			</ul>	
+							  		</div>
+							  	</div>
+					  		</div>
+					  	</div>
+					  	<div class="tab-pane fade" id="add-component">
+					  		<div class="edit-group">
+					  			<div class="edit-group-title">点击或拖拽添加组件</div>
+							  	<div class="editor-add-cmp">
+								  	<ul>
+								  		<li id="id-text">
+								  			<div><i class=""></i>文本框</div>
+								  		</li>
+								  		<li id="id-image">
+								  			<div>图片</div>
+								  		</li>
+								  		<li id="id-video">
+								  			<div>视频</div>
+								  		</li>
+								  		<li id="id-audio">
+								  			<div>音频</div>
+								  		</li>
+								  		<li id="id-audio">
+								  			<div>轮播</div>
+								  		</li>
+								  		<li id="id-table">
+								  			<div>表格</div>
+								  		</li>
+								  		<li id="id-icons">
+								  			<div>图标</div>
+								  		</li>
+								  		<li id="id-button">
+								  			<div>按钮</div>
+								  		</li>
+								  		<li id="id-divider">
+								  			<div>分割线</div>
+								  		</li>
+								  		<li id="id-share">
+								  			<div>分享到</div>
+								  		</li>
+								  	</ul>
+								</div>	
+					  		</div>
+					  	</div>
+					  	<div class="tab-pane fade in active" id="edit-component">
+					  	<!-- st edit-slider slide from right when click event is trigged -->
+					  	 	<div class="edit-slider-front">
+					  		<div class="edit-component edit-component-text">
+					  			<div class="edit-group edit-text">
+							  		<div class="edit-group-row">
+								  		<div class="edit-group-col">
+									  		<div id="edit-texteditor"></div>
+									  	</div>
+								  	</div>
+								</div>
+							  	<div class="edit-group">
+							  		<div class="edit-group-title">基础设置</div>
+							  		<div class="edit-group-row">
+							  			<div class="edit-group-col">
+									  		<div class="edit-header">
+									  			文本框背景色
+									  		</div>
+									  		<div class="edit-option">
+									  			<button class="edit-colpick"><span>无</span><b class="caret"></b></button>
+									  		</div>
+									  	</div>
+								  		<div class="edit-group-col">
+									  		<div class="edit-header">
+									  			文本框宽度
+									  		</div>
+									  		<div class="edit-option">
+									  			<select>
+									  				<option>100%</option>
+									  				<option>80%</option>
+									  				<option>60%</option>
+									  				<option>50%</option>
+									  			</select>
+									  		</div>
+									  	</div>
+									</div> 
+									</div> 	
+									<div class="edit-group">
+							  		<div class="edit-group-row">
+								  		<div class="edit-group-col">
+									  		<div class="edit-header">
+									  			文本框内边距
+									  		</div>
+									  		<div class="edit-option">
+									  			<select>
+									  				<option>无</option>
+									  				<option>大</option>
+									  				<option>中</option>
+									  				<option>小</option>
+									  			</select>
+									  		</div>
+									  	</div>
+									  	<div class="edit-group-col">
+									  		<div class="edit-header">
+									  			文本框外边距
+									  		</div>
+									  		<div class="edit-option">
+									  			<select>
+									  				<option>无</option>
+									  				<option>大</option>
+									  				<option>中</option>
+									  				<option>小</option>
+									  			</select>
+									  		</div>
+								  		</div>
+								  	</div>
+							  	</div>
+
+						  		<div class="edit-group">
+							  		<div class="edit-group-title">组件特效</div>
+							  		<div class="edit-group-row">
+							  			<ul>
+							  				<li class="page-trans-default">
+							  					<button class="btn btn-primary"></button>
+							  				</li>
+							  				<button class="btn btn-primary"></button>
+							  					<button class="btn btn-primary"></button>
+							  					<button class="btn btn-primary"></button>
+							  			</ul>
+							  		</div>
+							  	</div>
+					  		</div> 
+					  		</div>
+
+					  	<div class="edit-slider-back">
+					  		<div class="edit-component">
+						  		<div class="edit-group">
+								  		<div class="edit-group-title">图片设置</div>
+								  		<div class="edit-group-row">
+									  		<div class="edit-group-col">
+										  		<div class="edit-option">
+										  			<button class="btn btn-primary" id="upload-img-btn">上传图片</button>
+										  			<button class="btn btn-primary">更多图片</button>
+										  		</div>
+										  	</div>
+										</div>
+								</div>			
+							  	<div class="edit-group">
+							  		<div class="edit-group-title">基础设置</div>
+							  		<div class="edit-group-row">
+								  		<div class="edit-group-col">
+									  		<div class="edit-header">
+									  			图片宽度
+									  		</div>
+									  		<div class="edit-option">
+									  			<select>
+									  				<option>100%</option>
+									  				<option>80%</option>
+									  				<option>60%</option>
+									  				<option>50%</option>
+									  			</select>
+									  		</div>
+									  	</div>
+									</div>	
+							  		<div class="edit-group-row">
+								  		<div class="edit-group-col">
+									  		<div class="edit-header">
+									  			图片内边距
+									  		</div>
+									  		<div class="edit-option">
+									  			<select>
+									  				<option>无</option>
+									  				<option>大</option>
+									  				<option>中</option>
+									  				<option>小</option>
+									  			</select>
+									  		</div>
+									  	</div>
+									  	<div class="edit-group-col">
+									  		<div class="edit-header">
+									  			图片外边距
+									  		</div>
+									  		<div class="edit-option">
+									  			<select>
+									  				<option>无</option>
+									  				<option>大</option>
+									  				<option>中</option>
+									  				<option>小</option>
+									  			</select>
+									  		</div>
+								  		</div>
+								  	</div>
+							  	</div>
+
+						  		<div class="edit-group">
+							  		<div class="edit-group-title">组件特效</div>
+							  		<div class="edit-group-row">
+							  			<ul>
+							  				<li class="page-trans-default">
+							  					
+							  				</li>
+							  			</ul>
+							  		</div>
+							  	</div>
+					  		</div> 
+					  		</div>
+					  		</div>
+					  	</div>
+				</div>
+			</div>
+	    </div>
+	</div>
+	<!-- upload image modal 
+	     just as demo
+		 all styles need to be revised
+	 -->
+	<div id="upload-img-modal" class="upload-img-hide">
+		<div id="close-upload-btn" class="close-upload-modal radius50">
+			x
+		</div>	
+	</div>
+
+	<div id="upload-img-overlay" class="close-upload-modal">
+		
+	</div>
+	<!-- end -->
+	<!-- add page modal -->
+	<div id="add-page-modal">
+		<div id="close-page-btn" class="radius50">
+			x
+		</div>
+	</div>
+	<!-- end -->
+	<script type="text/javascript">
+	$(document).ready(function() {
+		/* text-editor */
+  		$('#edit-texteditor').summernote({
+  			height : 200,
+  			language :'zh-CN',
+  			toolbar : [
+		        ['font', ['bold', 'italic', 'underline']],
+		        ['para', ['ul', 'ol', 'paragraph']],
+		        ['style', ['style']],
+		        ['color', ['color']],
+		        ['fontname', ['fontname']],
+		        ['height', ['height']],
+		        ['insert', ['link', 'hr']],
+  			]
+  		});
+  		/* niceScroll */
+  		$('#canvas').niceScroll({cursorwidth:8});
+  		$('.editor-content').niceScroll({cursorwidth:8});
+
+  		/* colorpicker */
+		$('.edit-colpick').colpick({
+			colorScheme : 'dark',
+			onSubmit:function(hsb,hex,rgb,el) {
+				$(el).css({'background-color':'#'+hex,'color' : '#fff'})
+				.find('span').text('#'+hex);
+			}
+		});	
+		/* set left-nav-pages sortable*/
+		$('#left-nav-pages').sortable();
+
+		/* upload-img-modal */
+		$('#upload-img-btn').click(function(){
+			$('#upload-img-modal').removeClass('upload-img-hide');
+			$('#upload-img-overlay').show();
+		});
+		$('.close-upload-modal').click(function(){
+			$('#upload-img-modal').addClass('upload-img-hide');
+			$('#upload-img-overlay').hide();
+		});
+		/* edit-page fadeIn&fadeOut */
+		$('.image-button').click(function(){
+			$('.edit-slider-front').fadeOut(200,function(){
+				$('.edit-slider-back').fadeIn(200);
+			});
+		});
+		$('.text-button').click(function(){
+			$('.edit-slider-back').fadeOut(200,function(){
+				$('.edit-slider-front').fadeIn(200);
+			});
+		});
+		/* add-page-modal */
+		$('#add-page-btn').click(function(){
+			$('#add-page-modal').addClass('add-page-show');
+		});
+		$('#close-page-btn').click(function(){
+			$('#add-page-modal').removeClass('add-page-show');
+		});
+
+	});
+		
+	</script>
+</body>
+</html>
+<!-- 
 <body class="no_index">
     <div class="top">
 		<div class="w980">
@@ -1097,4 +1581,4 @@
 		});
 	</script>
 </body>
-</html>
+</html> -->
