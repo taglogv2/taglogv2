@@ -83,6 +83,7 @@
 
 		<div class="left-nav-controls">
 			<a class="left-nav-slider" id="save">
+				<input type="hidden" name="product_id" value="{$product.product_id}">
 				<span class="left-nav-icon"><i class="glyphicon glyphicon-floppy-disk"></i></span>
 				<span class="left-nav-text">保存</span>
 			</a>
@@ -179,6 +180,9 @@
 			YHB.gridNumber = 16;
 			YHB.gridSize = YHB.canvasWidth/YHB.gridNumber;
 
+			YHB.currentProduct = $("#save input").val();
+			YHB.currentPage = 0;
+			YHB.needToSave = {};
 			YHB.currentComId = false;
 			YHB.previousComId = false;
 			//alert($('.canvas-board').height());
@@ -201,17 +205,17 @@
 			})();
 	  		
 
-			/* 2. set left-nav-pages sortable*/
+			/* 2. set left-nav-pages sortable */
 			$('#left-nav-pages').sortable();
 
 
-			/* 3. canvas */
+			/* 3. canvas window */
 			initGridSystem();
 			$("#canvas").yhb_canvas({
 				callback:debug_log
 			});
 
-			/* 4. utilities */
+			/* 4. utilities window */
 			$("#utility-image").yhb_utility({
 				componentName: "yhb_single_image",
 				canvasID: "canvas",
@@ -238,13 +242,19 @@
 
 		$(window).resize(function() {
 			// TODO:
-  			//YHB.gridSize = $(document).width()/YHB.gridNumber;
+  			// YHB.gridSize = $(document).width()/YHB.gridNumber;
 		});
 
 
 		$("#save").on("click", function(){
-			//遍历所有com，发送保存信号
-			$("#canvas").save();
+			//$("#canvas").save();
+			var postUrl = '{:U('product/edit','product_id='.$product['product_id'])}';
+			//$("#canvas").children(".component").trigger("save", postUrl);
+			//alert(JSON.stringify(YHB.needToSave));
+			//alert(postUrl);
+			$.post(postUrl, JSON.stringify(YHB.needToSave), function(data) {
+				alert(data);
+			});
 		});
 
 	</script>
