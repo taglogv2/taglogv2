@@ -178,13 +178,14 @@ class ProductAction extends Action {
 		if($this->isPost() || $this->isAjax()) {
 			$d_product = D('Product');
 			$m_page = M('Page');
-			$product['product_id'] = $this->_post('product_id', 'intval');
-			if($product['product_id'] == null) {
-				//echo("add");
-				
-			} else { 
-				echo("edit");
-			}
+			$member_id = intval(session('member_id'));
+			$create_time = time();
+			//$json_obj = filtStr($this->_post('productname', 'trim'));
+			$json_obj = $_POST['productname'];
+			$this->error($json_obj."shit"."done");
+			die();
+			//TODO
+
 		}else if($this->isPost() || $this->isAjax()){
 			$d_product = D('Product');
 			$d_video = D('Video');

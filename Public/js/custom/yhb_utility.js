@@ -73,6 +73,7 @@
                 initialLeftInGrid: Math.round(ui.position.left/YHB.gridSize),
                 callback: plugin.options.callback
             });
+            
             YHB.comCount.incCount();
 
         });

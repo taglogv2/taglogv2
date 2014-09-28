@@ -86,7 +86,7 @@
 	<div class="edit-wrapper">
 		<!-- left column of the preview section -->
 		<div class="half-col canvas-wrapper">
-			<div class="canvas-board">
+			<div class="canvas-board" id="135">
 				<div class="grid-system" id="canvas">
 				</div> 
 			</div>
@@ -168,9 +168,12 @@
 			YHB.gridNumber = 16;
 			YHB.gridSize = YHB.canvasWidth/YHB.gridNumber;
 
-			YHB.currentProduct = $("#save input").val();
-			YHB.currentPage = 0;
-			YHB.needToSave = {};
+			//YHB.currentProductId = $("#save input").val();
+			YHB.currentProductId = "3"; // 测试用
+			YHB.currentProductName = "测试";
+			YHB.currentPage = "135"; // 此值保存每个页面在数据库中的id
+			//YHB.needToSave = {};
+			YHB.pluginInstanceArray = {};
 			YHB.currentComId = false;
 			YHB.previousComId = false;
 			//alert($('.canvas-board').height());
@@ -234,15 +237,77 @@
 		});
 
 
+		/*
+		和后台交互的json数据格式
+		{
+		    "productname": "说明书标题", 
+		    "producttype": "说明书种类", 
+		    "productid": "产品id(唯一&和数据库同步)",
+		    "pages": [
+		        {
+		            "pagetitle": "页名字", 
+		            "pagesort": "页编号0", 
+		            "pageid": "页面id(唯一&和数据库同步)"
+		            "content": "<div>...</div>"
+		        }...
+		    ]
+		}*/
+
+		/*
+		原子操作类型:
+		增加[页面|组件] 			-> 返回 [页面|组件]id
+		更新[页面|组件]中的属性 	-> 返回 成功 or 失败
+		删除[页面|组件] 			-> 返回 成功 or 失败 
+		{
+		    "actions": [
+		        {
+		            "A": "Insert_Delete_Update",
+		            "O": "product_page_component",
+		            "Id": "comId",
+		            "Key": "title_type_content",
+		            "Val": "the content"
+		        }
+		    ]
+		}
+		*/
+
 		$("#save").on("click", function(){
-			//$("#canvas").save();
+			var toUploadJSON = {};
+			toUploadJSON.productname = YHB.currentProductName;
+			toUploadJSON.productid = YHB.currentProductId;
+			toUploadJSON.pages = [];
+
 			var postUrl = '{:U('product/edit','product_id='.$product['product_id'])}';
-			//$("#canvas").children(".component").trigger("save", postUrl);
-			alert(JSON.stringify(YHB.needToSave));
-			//alert(postUrl);
-			$.post(postUrl, JSON.stringify(YHB.needToSave), function(data) {
-				alert(data);
+			var savedPages = {};
+			for(key in YHB.pluginInstanceArray) {
+				val = YHB.pluginInstanceArray[key];
+				if(!val.saved() && !savedPages[val.pageId()]) {
+					savedPages[val.pageId()] = true;
+					var tmpstr = "";
+					//alert($("#"+val.pageId()).html());
+					$("#"+val.pageId()).find(".component").each(function(index){
+						//alert(YHB.pluginInstanceArray[$(this).attr("id")].html());
+						//alert($(this).outerHTML());
+						tmpstr += YHB.pluginInstanceArray[$(this).attr("id")].html();	
+						//alert(tmpstr);			
+						
+					});
+					var pageJSON = {};
+					pageJSON.pageid = val.pageId();
+					pageJSON.content = tmpstr;
+					//alert(JSON.stringify(pageJSON));
+					toUploadJSON.pages.push(pageJSON);
+				} else if(!val.saved() && savedPages[val.pageId()]) {
+					val.saved(true);
+				}
+			}
+			alert(JSON.stringify(toUploadJSON));
+			$.post(postUrl, JSON.stringify(toUploadJSON), function(data){
+				alert("success");
+			}).fail(function() {
+				alert("failed");
 			});
+			
 		});
 
 	</script>

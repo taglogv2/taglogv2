@@ -53,20 +53,20 @@
     };
 
     Plugin.prototype.addComToCanvas = function() {
+        var $this = $(this.element);
         this.htmlObj.leftInGrid(this.options.initialLeftInGrid);
         this.htmlObj.topInGrid(this.options.initialTopInGrid);
+        this.htmlObj.id($this.attr("id"));
+        this.htmlObj.pageId(YHB.currentPage);
         this.htmlObj.saved(false);
+        YHB.pluginInstanceArray[this.htmlObj.id()] = this.htmlObj;
         this.htmlObj.id($(this.element).attr("id"));
-        this.preSave();
-        //alert(this.htmlObj.html());
         $(this.htmlObj.html()).appendTo($canvas);
     };
 
 
-    Plugin.prototype.preSave = function() {
-        YHB.needToSave[this.htmlObj.id()] = {html:this.htmlObj.html(), page:YHB.currentPage};
-        //alert(JSON.stringify(YHB.needToSave));
-    }
+
+
 
     //Plugin.prototype.saveEventHandler = function() {
     //    var comid = $(this.element).attr("id");
@@ -74,7 +74,7 @@
     //    $("#"+comid).on("save", function(event, postUrl) {
     //        if(!plugin.htmlObj.saved()) {
     //            //alert(plugin.htmlObj.html());
-    //            //alert("pageID: "+YHB.currentPage+" "+YHB.currentProduct);
+    //            //alert("pageID: "+YHB.currentPage+" "+YHB.currentProductId);
     //        }
     //    });
     //};
@@ -169,7 +169,7 @@
                     plugin.htmlObj.leftInGrid(Math.round(ui.position.left/YHB.gridSize));
                     plugin.htmlObj.topInGrid(Math.round(ui.position.top/YHB.gridSize));
                     plugin.htmlObj.saved(false);
-                    plugin.preSave();
+                    YHB.pluginInstanceArray[plugin.htmlObj.id()] = plugin.htmlObj;
                 });
             },
             drag: function(event, ui) {
@@ -189,7 +189,7 @@
                 plugin.htmlObj.widthInGrid(Math.round(ui.helper.width()/YHB.gridSize));
                 plugin.htmlObj.heightInGrid(Math.round(ui.helper.height()/YHB.gridSize));
                 plugin.htmlObj.saved(false);
-                plugin.preSave();
+                YHB.pluginInstanceArray[plugin.htmlObj.id()] = plugin.htmlObj;
             },
             // set grid as basic unit for move
             // TODO： 此处有问题，高度随着缩放的次数而逐渐变小，可能的原因是jquery resizable插件里面height设置有问题
@@ -211,6 +211,7 @@
     //组件的 html 代码
     var htmlTpl = function(plugin) {
         var saved = true,
+            pageId = "0",
             id = "tmp",
             imgSrc = "./Public/css/img/empty_image-72.jpg",
             
@@ -226,6 +227,12 @@
                     saved = arguments[0]; 
                 }
              },
+            pageId: function() {
+                if(arguments.length === 0) return pageId;
+                else if(arguments.length === 1){
+                    pageId = arguments[0]; 
+                }
+            },
             id: function() { 
                 if(arguments.length === 0) return id;
                 else if(arguments.length === 1){
